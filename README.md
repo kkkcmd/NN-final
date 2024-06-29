@@ -14,3 +14,5 @@ python Vit.py
 python Resnet18.py
 
 可以通过超参数列表来设置参数。
+
+运行tensorboard --logdir=./runs可以查看训练过程，仓库中已经提前给出两个模型的记录文件，直接将runs文件夹进行替换即可。
