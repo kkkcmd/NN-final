@@ -17,12 +17,32 @@ python Resnet18.py
 
 运行tensorboard --logdir=./runs可以查看训练过程，仓库中已经提前给出两个模型的记录文件，直接将runs文件夹进行替换即可。
 
-如果在百度云网盘中提前下载完成训练好的模型权重文件，则权重文件的加载代码为: （以vit模型为例）
+如果在百度云网盘中提前下载完成训练好的模型权重文件，则权重文件的加载代码为: 
 
-vit_model = ...  # 创建与保存时相同的模型实例
+vit模型：
 
-model_load_path = 'vit_model_weights.pth'
+config = ViTConfig.from_pretrained('./vit-tiny-patch16-224/config.json')
 
-vit_model.load_state_dict(torch.load(model_load_path))
+config.num_labels = num_classes
 
-vit_model.eval()
+model = ViTForImageClassification(config)
+
+将模型权重文件调整为本次训练好的参数文件
+
+state_dict = torch.load('./vit_model_weights.pth')
+
+missing_keys, unexpected_keys = model.load_state_dict(state_dict, strict=False)
+
+model.classifier = nn.Linear(model.config.hidden_size, num_classes)
+
+model.eval()
+
+resnet模型：
+
+model = models.resnet18()
+
+model_weights_path = 'path/to/your/resnet_model_weights.pth'
+
+model.load_state_dict(torch.load(model_weights_path))
+
+model.eval()
